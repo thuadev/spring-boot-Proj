@@ -5,7 +5,6 @@ spring:
     password:
     url: jdbc:h2:mem:h2test
     schema: classpath:schema.sql
-    data: classpath:data.sql
     platform: h2
   h2:
     console:
@@ -17,3 +16,10 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+server:
+  servlet:
+    context-path: /proj
+  port: 8080
+logging:
+  config: classpath:logback-boot.xml
+

@@ -1,11 +1,11 @@
 package com.thuadev.proj.pojo;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
-
+@MappedSuperclass
 public class BaseEntity {
     @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
     @Column
     private Date created;

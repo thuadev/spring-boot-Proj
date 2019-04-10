@@ -3,16 +3,19 @@ package com.thuadev.proj.service;
 import com.thuadev.proj.pojo.UserEntity;
 import com.thuadev.proj.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -34,5 +37,17 @@ public class UserService {
         cq.select(criteriaBuilder.greatest((Path)root.get("id")));
         TypedQuery<Long> typedQuery = entityManager.createQuery(cq);
         return typedQuery.getSingleResult();
+    }
+    public Page<UserEntity> findByCondition(UserEntity userEntity, Pageable pageable){
+        return userRepository.findAll((root, query, cb)->{
+            List<Predicate> predicates = new ArrayList<Predicate>();
+            if(!StringUtils.isEmpty(userEntity.getUserName())){
+                predicates.add(cb.like(root.get("userName"),"%"+userEntity.getUserName()));
+            }
+            return query.where(predicates.toArray(new Predicate[predicates.size()])).getRestriction();
+        },pageable);
+    }
+    public UserEntity findTopByCreated(){
+        return userRepository.findFirstByOrderByCreatedDesc();
     }
 }
