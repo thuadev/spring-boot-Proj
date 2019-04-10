@@ -42,6 +42,7 @@ public class FirstController {
     }
     @RequestMapping(value = "/lastUser", method = RequestMethod.GET)
     public UserEntity lastUser(){
+        logger.info("查询最新客户");
         return userService.findTopByCreated();
     }
     @RequestMapping(value = "/getUsers/{userName}", method = RequestMethod.GET)
