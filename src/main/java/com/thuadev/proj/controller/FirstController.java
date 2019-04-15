@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import javax.persistence.EntityNotFoundException;
+import java.util.*;
 
 @RestController
 public class FirstController {
@@ -28,21 +27,31 @@ public class FirstController {
         return "你好";
     }
     @RequestMapping(value = "/getUser/{id}",method = RequestMethod.GET)
-    public UserEntity getUser(@PathVariable("id") Long id){
-        return userService.findUserEntityById(id);
+    public Map<String, Object> getUser(@PathVariable("id") Long id){
+        Map<String, Object> resultMap = new HashMap<>();
+        UserEntity userEntity = userService.findUserEntityById(id);
+        if (userEntity == null){
+            resultMap.put("count", 0);
+            resultMap.put("objects", null);
+        }else {
+            resultMap.put("count",1);
+            resultMap.put("objects", userEntity);
+        }
+        return resultMap;
+
     }
-    @RequestMapping(value = "/addUser", method = RequestMethod.GET)
-    public UserEntity addUser(){
+    @RequestMapping(value = "/addUser/{userName}", method = RequestMethod.GET)
+    public UserEntity addUser(@PathVariable("userName")String userName){
         UserEntity userEntity = new UserEntity();
         Date date = new Date();
         userEntity.setCreated(date);
         userEntity.setUpdated(date);
-        userEntity.setUserName("小D");
+        userEntity.setUserName(userName);
         return userService.addUser(userEntity);
     }
     @RequestMapping(value = "/lastUser", method = RequestMethod.GET)
     public UserEntity lastUser(){
-        logger.info("查询最新客户");
+        logger.info("查询最新客户 ");
         return userService.findTopByCreated();
     }
     @RequestMapping(value = "/getUsers/{userName}", method = RequestMethod.GET)

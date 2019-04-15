@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaSpecificationExecutor<UserEntity>,JpaRepository<UserEntity,Long> {
     UserEntity findFirstByOrderByCreatedDesc();
+    UserEntity findUserEntityById(Long id);
 }

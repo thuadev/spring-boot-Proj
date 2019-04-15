@@ -16,6 +16,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+    #禁用视图
+    open-in-view: false
+
 server:
   servlet:
     context-path: /proj
